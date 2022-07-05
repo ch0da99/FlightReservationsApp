@@ -11,5 +11,6 @@ namespace FlyReservationApp.Models
         public Flight IdFlight { get; set; }
         public Customer IdCustomer { get; set; }
         public int Quantity { get; set; }
+        public bool Approved { get; set; }
     }
 }

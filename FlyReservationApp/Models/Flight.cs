@@ -15,5 +15,6 @@ namespace FlyReservationApp.Models
         public DateTime ArrivalTime { get; set; }
         public int NumberOfTransfers { get; set; }
         public int NumberOfSeats { get; set; }
+        public bool Canceled { get; set; }
     }
 }
