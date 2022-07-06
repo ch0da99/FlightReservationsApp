@@ -1,9 +1,7 @@
 import React from "react";
 
-const Login = () => {
-     return ( 
-        <div>pozz</div>
-     )
-}
+const CustomerPanel = () => {
+  return <div>customer</div>;
+};
 
-export default Login;
+export default CustomerPanel;

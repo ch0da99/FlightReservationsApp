@@ -12,6 +12,7 @@ namespace FlyReservationApp
 {
     public class Startup
     {
+        string myCorsPolicy = "_myCorsPolicy";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,6 +28,17 @@ namespace FlyReservationApp
             services.AddDbContext<FlightReservationContext>(options =>
             {
                 options.UseSqlite(@"Data Source=FlightReservations.db;");
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: myCorsPolicy,
+                    policy =>
+                    {
+                        policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
             });
 
             // In production, the React files will be served from this directory
@@ -50,17 +62,18 @@ namespace FlyReservationApp
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}")
+                .RequireCors(myCorsPolicy);
             });
 
             app.UseSpa(spa =>

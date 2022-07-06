@@ -1,4 +1,5 @@
 ﻿using FlyReservationApp.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,11 +19,35 @@ namespace FlightReservationsApp.Controllers
         // GET: LoginController
         [HttpPost]
         [Route("/login")]
-        public string Login(string username, string password)
+        [EnableCors("_myCorsPolicy")]
+        public IActionResult logIn(string username, string password)
         {
             User user = _context.Users.Select(user => user).Where(user => user.Username == username && user.Password == password).FirstOrDefault();
-            string a = Newtonsoft.Json.JsonConvert.SerializeObject(user);
-            return Newtonsoft.Json.JsonConvert.SerializeObject(user);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpGet]
+        [Route("/userType/{id?}")]
+        [EnableCors("_myCorsPolicy")]
+        public IActionResult getType(int? id)
+        {
+            User user = _context.Users.Select(user => user).Where(user => user.Id == id).FirstOrDefault();
+            if (user != null)
+            {
+                Type a = user.GetType();
+                return Ok(user.GetType().Name);
+            }
+            else
+            {
+                return NoContent();
+            }
         }
     }
 }
