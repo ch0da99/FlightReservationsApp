@@ -19,5 +19,12 @@ namespace FlyReservationApp.Models
         {
             optionsBuilder.UseSqlite(@"Data Source=FlightReservations.db;");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>();
+            modelBuilder.Entity<Agent>();
+            modelBuilder.Entity<Administrator>();
+        }
     }
 }

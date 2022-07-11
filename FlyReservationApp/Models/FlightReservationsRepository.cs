@@ -32,9 +32,11 @@ namespace FlightReservationsApp.Models
         public List<Reservation> RequestAllReservations()
         {
             List<Reservation> reservations = _context.Reservations
-                //.Include(r => r.Customer)
+                .Include(r => r.Customer)
                 .Include(r => r.Flight)
+                .ThenInclude(f => f.Agent)
                 .ToList();
+            //var a = _context.Users.Select(f => f.Agent.Flights);
             //var query = "Select Reservations.Id, Approved, Quantity, Username, " +
             //    "Flights.id,Cities.Name, DepartureTime, ArrivalTime, " +
             //    "Cities.Name, AllSeats, TakenSeats " +

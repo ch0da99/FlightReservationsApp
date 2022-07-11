@@ -35,7 +35,7 @@ namespace FlightReservationsApp.Hubs
         public async Task AgentAllReservations()
         {
             List<Reservation> reservations = repository.RequestAllReservations();
-            await Clients.All.SendAsync("AllReservations", JsonConvert.SerializeObject(reservations));
+            await Clients.All.SendAsync("AllReservations", reservations);
         }
 
         public async Task AgentAllFlights(string agentId)

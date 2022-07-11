@@ -9,7 +9,7 @@ namespace FlyReservationApp.Models
     {
         public int Id { get; set; }
         public Flight Flight { get; set; }
-        public Customer Customer { get; set; }
+        public User Customer { get; set; }
         public int Quantity { get; set; }
         public bool Approved { get; set; }
     }

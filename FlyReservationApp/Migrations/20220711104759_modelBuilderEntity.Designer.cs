@@ -3,14 +3,16 @@ using System;
 using FlyReservationApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FlightReservationsApp.Migrations
 {
     [DbContext(typeof(FlightReservationContext))]
-    partial class FlightReservationContextModelSnapshot : ModelSnapshot
+    [Migration("20220711104759_modelBuilderEntity")]
+    partial class modelBuilderEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,9 +62,6 @@ namespace FlightReservationsApp.Migrations
                     b.Property<int?>("AgentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AgentId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("AllSeats")
                         .HasColumnType("INTEGER");
 
@@ -88,8 +87,6 @@ namespace FlightReservationsApp.Migrations
 
                     b.HasIndex("AgentId");
 
-                    b.HasIndex("AgentId1");
-
                     b.HasIndex("DestinationCityId");
 
                     b.HasIndex("StartingCityId");
@@ -109,9 +106,6 @@ namespace FlightReservationsApp.Migrations
                     b.Property<int?>("CustomerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("CustomerId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("FlightId")
                         .HasColumnType("INTEGER");
 
@@ -121,8 +115,6 @@ namespace FlightReservationsApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("CustomerId1");
 
                     b.HasIndex("FlightId");
 
@@ -193,13 +185,9 @@ namespace FlightReservationsApp.Migrations
 
             modelBuilder.Entity("FlyReservationApp.Models.Flight", b =>
                 {
-                    b.HasOne("FlyReservationApp.Models.User", "Agent")
-                        .WithMany()
-                        .HasForeignKey("AgentId");
-
-                    b.HasOne("FlyReservationApp.Models.Agent", null)
+                    b.HasOne("FlyReservationApp.Models.Agent", "Agent")
                         .WithMany("Flights")
-                        .HasForeignKey("AgentId1");
+                        .HasForeignKey("AgentId");
 
                     b.HasOne("FlyReservationApp.Models.City", "DestinationCity")
                         .WithMany()
@@ -218,13 +206,9 @@ namespace FlightReservationsApp.Migrations
 
             modelBuilder.Entity("FlyReservationApp.Models.Reservation", b =>
                 {
-                    b.HasOne("FlyReservationApp.Models.User", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.HasOne("FlyReservationApp.Models.Customer", null)
+                    b.HasOne("FlyReservationApp.Models.Customer", "Customer")
                         .WithMany("Reservations")
-                        .HasForeignKey("CustomerId1");
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("FlyReservationApp.Models.Flight", "Flight")
                         .WithMany()
