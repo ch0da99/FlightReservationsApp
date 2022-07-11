@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container, Input, Row, Card, Button } from "reactstrap";
 import { logIn } from "../api/login";
+import { connect } from "react-redux";
+import {
+  logInUserWithCredentials,
+  userRoleCheck,
+} from "../redux/actions/loginActions";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ user, role, logIn, userRole }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   return (
     <>
       <Container className="d-flex justify-content-center">
@@ -33,6 +43,10 @@ const Login = () => {
             <Button
               onClick={() => {
                 logIn(username, password);
+                navigate(from, { replace: true });
+                setTimeout(() => {
+                  navigate(from, { replace: true });
+                }, [500]);
               }}
               className="btn-primary mt-5"
             >
@@ -45,4 +59,13 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    user: state.LoginReducer.user ? state.LoginReducer.user : [],
+  };
+};
+
+const mapDispatchToProps = {
+  logIn: (username, password) => logInUserWithCredentials(username, password),
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

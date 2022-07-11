@@ -3,5 +3,15 @@ import ProtectedRoute from "./ProtectedRoute";
 import CustomerPanel from "./CustomerPanel";
 import AdministratorPanel from "./AdministratorPanel";
 import AgentPanel from "./AgentPanel";
+import Home from "./Home";
+import NavMenu from "./NavMenu";
 
-export { Login, ProtectedRoute, CustomerPanel, AdministratorPanel, AgentPanel };
+export {
+  Login,
+  ProtectedRoute,
+  CustomerPanel,
+  AdministratorPanel,
+  AgentPanel,
+  Home,
+  NavMenu,
+};

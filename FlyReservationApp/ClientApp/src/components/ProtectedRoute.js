@@ -1,11 +1,23 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Login from "./Login";
+import { connect } from "react-redux";
 
-const ProtectedRoute = ({ user, role }) => {
-  console.log(user.role);
-  console.log(role);
-  return user && user.role == role ? <Outlet /> : <Login />;
+const ProtectedRoute = ({ user }) => {
+  const location = useLocation();
+  return user ? (
+    <Outlet />
+  ) : (
+    <Navigate to={"/signIn"} state={{ from: location }} replace />
+  );
 };
 
-export default ProtectedRoute;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    user: state.LoginReducer.user ? state.LoginReducer.user : null,
+  };
+};
+
+const mapDispatchToProps = {};
+export default connect(mapStateToProps, mapDispatchToProps)(ProtectedRoute);

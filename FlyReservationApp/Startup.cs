@@ -1,3 +1,4 @@
+using FlightReservationsApp.Hubs;
 using FlyReservationApp.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,12 +24,12 @@ namespace FlyReservationApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSignalR();
             services.AddControllersWithViews();
-            services.AddDbContext<FlightReservationContext>(options =>
-            {
-                options.UseSqlite(@"Data Source=FlightReservations.db;");
-            });
+            //services.AddDbContext<FlightReservationContext>(options =>
+            //{
+            //    options.UseSqlite(@"Data Source=FlightReservations.db;");
+            //});
             services.AddCors(options =>
             {
                 options.AddPolicy(name: myCorsPolicy,
@@ -74,6 +75,7 @@ namespace FlyReservationApp
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}")
                 .RequireCors(myCorsPolicy);
+                endpoints.MapHub<ReservationsHub>("/reservationsHub");
             });
 
             app.UseSpa(spa =>

@@ -1,4 +1,5 @@
-﻿using FlyReservationApp.Models;
+﻿using FlightReservationsApp.Models;
+using FlyReservationApp.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +12,13 @@ namespace FlightReservationsApp.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly FlightReservationContext _context;
-        public LoginController(FlightReservationContext context)
-        {
-            _context = context;
-        }
-        // GET: LoginController
+        private readonly FlightReservationsRepository repository = FlightReservationsRepository.Repository;
         [HttpPost]
         [Route("/login")]
         [EnableCors("_myCorsPolicy")]
-        public IActionResult logIn(string username, string password)
+        public IActionResult LogIn(string username, string password)
         {
-            User user = _context.Users.Select(user => user).Where(user => user.Username == username && user.Password == password).FirstOrDefault();
+            User user = repository.LogInUser(username,password);
             if (user != null)
             {
                 return Ok(user);
@@ -33,15 +29,14 @@ namespace FlightReservationsApp.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/userType/{id?}")]
+        [HttpPost]
+        [Route("/userType")]
         [EnableCors("_myCorsPolicy")]
-        public IActionResult getType(int? id)
+        public IActionResult GetType(string username)
         {
-            User user = _context.Users.Select(user => user).Where(user => user.Id == id).FirstOrDefault();
+            User user = repository.UserRole(username);
             if (user != null)
             {
-                Type a = user.GetType();
                 return Ok(user.GetType().Name);
             }
             else

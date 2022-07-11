@@ -3,14 +3,16 @@ using System;
 using FlyReservationApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FlightReservationsApp.Migrations
 {
     [DbContext(typeof(FlightReservationContext))]
-    partial class FlightReservationContextModelSnapshot : ModelSnapshot
+    [Migration("20220711082230_NoMoreIdInColumnNames")]
+    partial class NoMoreIdInColumnNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,6 +154,13 @@ namespace FlightReservationsApp.Migrations
                     b.HasDiscriminator().HasValue("Agent");
                 });
 
+            modelBuilder.Entity("FlyReservationApp.Models.Customer", b =>
+                {
+                    b.HasBaseType("FlyReservationApp.Models.User");
+
+                    b.HasDiscriminator().HasValue("Customer");
+                });
+
             modelBuilder.Entity("FlightReservationsApp.Models.Transfer", b =>
                 {
                     b.HasOne("FlyReservationApp.Models.City", "City")
@@ -190,8 +199,8 @@ namespace FlightReservationsApp.Migrations
 
             modelBuilder.Entity("FlyReservationApp.Models.Reservation", b =>
                 {
-                    b.HasOne("FlyReservationApp.Models.User", "Customer")
-                        .WithMany()
+                    b.HasOne("FlyReservationApp.Models.Customer", "Customer")
+                        .WithMany("Reservations")
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("FlyReservationApp.Models.Flight", "Flight")
@@ -206,6 +215,11 @@ namespace FlightReservationsApp.Migrations
             modelBuilder.Entity("FlyReservationApp.Models.Agent", b =>
                 {
                     b.Navigation("Flights");
+                });
+
+            modelBuilder.Entity("FlyReservationApp.Models.Customer", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

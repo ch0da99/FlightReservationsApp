@@ -8,13 +8,13 @@ namespace FlyReservationApp.Models
     public class Flight
     {
         public int Id { get; set; }
-        public Agent IdAgent { get; set; }
-        public City StartingPoint { get; set; }
-        public City DestinationPoint { get; set; }
+        public Agent Agent { get; set; }
+        public City StartingCity { get; set; }
+        public City DestinationCity { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
-        public int NumberOfTransfers { get; set; }
-        public int NumberOfSeats { get; set; }
+        public int AllSeats { get; set; }
+        public int TakenSeats { get; set; }
         public bool Canceled { get; set; }
     }
 }
