@@ -22,6 +22,11 @@ const AgentReducer = (state = initialState, action) => {
           ...state.reservations.slice(index + 1),
         ],
       };
+    case types.AGENT_GET_ALL_CITIES_SUCCESS:
+      return {
+        ...state,
+        cities: action.cities
+      }
     default:
       return state;
   }

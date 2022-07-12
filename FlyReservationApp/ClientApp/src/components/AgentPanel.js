@@ -2,7 +2,7 @@ import React from "react";
 import { connectionSignalR } from "../api/signalR/config.js";
 import { SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST } from "../api/signalR/remoteProcedures.js";
 import { connect } from "react-redux";
-import "./AgentPanel.css";
+import "../style/css/AgentPanel.css";
 import {
   getAllReservationsForAgent,
   approveReservation,
@@ -33,7 +33,7 @@ const AgentPanel = ({
       .invoke(SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST)
       .catch((error) => console.log("greska"));
   });
-  connectionSignalR.on("AllReservations", (reservations) => {
+  connectionSignalR.on("AllReservationsResponse", (reservations) => {
     fetchReservations(reservations);
   });
   connectionSignalR.on("NewReservationApprove", (id) => {
@@ -58,6 +58,7 @@ const AgentPanel = ({
             <ul className="list-inline">
               <li>
                 {reservation.flight.startingCity.name} ---{">"}{" "}
+                {reservation.flight.transfer && <span className="transfer_city">{reservation.flight.transfer.name}  ---> </span>}
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
@@ -119,4 +120,5 @@ const mapDispatchToProps = {
   fetchReservations: (reservations) => getAllReservationsForAgent(reservations),
   approveCustomerReservation: (id) => approveReservation(id),
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(AgentPanel);

@@ -9,7 +9,7 @@ import {
   NavLink,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import "./NavMenu.css";
+import "../style/css/NavMenu.css";
 import { useState } from "react";
 import { connect } from "react-redux";
 

@@ -39,6 +39,8 @@ namespace FlightReservationsApp.Models
                 .ThenInclude(f => f.DestinationCity)
                 .Include(r => r.Flight)
                 .ThenInclude(f => f.StartingCity)
+                .Include(r => r.Flight)
+                .ThenInclude(f => f.Transfer)
                 .ToList();
             return reservations;
         }
@@ -54,6 +56,18 @@ namespace FlightReservationsApp.Models
             {
                 return 0;
             }
+        }
+
+        public List<Flight> RequestAllFlights()
+        {
+            List<Flight> flights = _context.Flights.ToList();
+            return flights;
+        }
+
+        public List<City> RequestAllCities()
+        {
+            List<City> cities = _context.Cities.ToList();
+            return cities;
         }
 
     }

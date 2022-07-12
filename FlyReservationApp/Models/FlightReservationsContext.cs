@@ -13,7 +13,6 @@ namespace FlyReservationApp.Models
         public DbSet<City> Cities { get; set; }
         public DbSet<Flight> Flights { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Transfer> Transfers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

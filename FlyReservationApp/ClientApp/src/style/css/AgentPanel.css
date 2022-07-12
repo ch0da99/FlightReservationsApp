@@ -15,3 +15,8 @@
 .approved button {
   display: none;
 }
+
+.transfer_city{
+  font-size: large;
+  color: #a3a3a3;
+}
