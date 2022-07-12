@@ -47,6 +47,16 @@ const NavMenu = ({ user }) => {
                   Home
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink
+                  tag={Link}
+                  className="text-dark"
+                  to="/addNewFlight"
+                  disabled={user == null}
+                >
+                  New Flight
+                </NavLink>
+              </NavItem>
             </ul>
             {/* <ul className="navbar-nav flex-grow">
               <NavItem>

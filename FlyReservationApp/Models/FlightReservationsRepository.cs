@@ -35,16 +35,25 @@ namespace FlightReservationsApp.Models
                 .Include(r => r.Customer)
                 .Include(r => r.Flight)
                 .ThenInclude(f => f.Agent)
+                .Include(r => r.Flight)
+                .ThenInclude(f => f.DestinationCity)
+                .Include(r => r.Flight)
+                .ThenInclude(f => f.StartingCity)
                 .ToList();
-            //var a = _context.Users.Select(f => f.Agent.Flights);
-            //var query = "Select Reservations.Id, Approved, Quantity, Username, " +
-            //    "Flights.id,Cities.Name, DepartureTime, ArrivalTime, " +
-            //    "Cities.Name, AllSeats, TakenSeats " +
-            //    "from Reservations inner join Users on Reservations.CustomerId == Users.Id " +
-            //    "inner join Flights on Reservations.FlightId = Flights.Id" +
-            //    "inner join Cities on Flights.DestinationCityId = Cities.Id";
-            //List<Reservation> reservations = _context.Reservations.FromSqlRaw(query).ToList();
             return reservations;
+        }
+        public int ApproveReservation(int id)
+        {
+            try
+            {
+                _context.Reservations.Where(r => r.Id == id).Select(r => r).FirstOrDefault().Approved = true;
+                _context.SaveChanges();
+                return id;
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
     }

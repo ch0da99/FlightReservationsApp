@@ -5,6 +5,7 @@ import AdministratorPanel from "./AdministratorPanel";
 import AgentPanel from "./AgentPanel";
 import Home from "./Home";
 import NavMenu from "./NavMenu";
+import NewFlight from "./NewFlight";
 
 export {
   Login,
@@ -14,4 +15,5 @@ export {
   AgentPanel,
   Home,
   NavMenu,
+  NewFlight,
 };

@@ -3,9 +3,10 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Login from "./Login";
 import { connect } from "react-redux";
 
-const ProtectedRoute = ({ user }) => {
+const ProtectedRoute = ({ user, requiredRole = null }) => {
   const location = useLocation();
-  return user ? (
+  console.log(requiredRole);
+  return user && (requiredRole == null || requiredRole == user.role) ? (
     <Outlet />
   ) : (
     <Navigate to={"/signIn"} state={{ from: location }} replace />

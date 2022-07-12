@@ -38,9 +38,10 @@ namespace FlightReservationsApp.Hubs
             await Clients.All.SendAsync("AllReservations", reservations);
         }
 
-        public async Task AgentAllFlights(string agentId)
+        public async Task ApproveReservationRequest(int idReservation)
         {
-
+            int id = repository.ApproveReservation(idReservation);
+            await Clients.All.SendAsync("NewReservationApprove", id);
         }
     }
 }

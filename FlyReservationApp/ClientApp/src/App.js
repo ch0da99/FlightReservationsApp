@@ -11,6 +11,7 @@ import {
   AdministratorPanel,
   AgentPanel,
   Home,
+  NewFlight,
 } from "./components/index";
 
 import "./custom.css";
@@ -36,6 +37,9 @@ const App = () => {
       </Routes> */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
+          <Route element={<ProtectedRoute requiredRole={"Agent"} />}>
+            <Route path="/addNewFlight" element={<NewFlight />} />
+          </Route>
         </Route>
       </Routes>
     </Layout>
