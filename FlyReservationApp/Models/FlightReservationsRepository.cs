@@ -58,17 +58,53 @@ namespace FlightReservationsApp.Models
             }
         }
 
-        public List<Flight> RequestAllFlights()
+        public List<Flight> RequestAllFlightsWithNoReservationForUser(int id)
         {
-            List<Flight> flights = _context.Flights.ToList();
+            List<Flight> flights = _context.Reservations
+                .Include(r => r.Customer)
+                .Include(r => r.Flight)
+                .Where(r => r.Customer.Id != id)
+                .Select(r => r.Flight)
+                .ToList();
             return flights;
         }
 
         public List<City> RequestAllCities()
         {
-            List<City> cities = _context.Cities.ToList();
+            List<City> cities = _context.Cities.AsNoTracking().ToList();
             return cities;
         }
 
+        public User GetAgentById(int id)
+        {
+            User user = _context.Users.AsNoTracking().Where(u => u.Id == id).FirstOrDefault();
+            return user;
+        }
+
+        public City GetCityById(int id)
+        {
+            City user = _context.Cities.AsNoTracking().Where(c => c.Id == id).FirstOrDefault();
+            return user;
+        }
+
+        public void AddNewFlight(Flight flight)
+        {
+            _context.Flights.Add(flight);
+            _context.SaveChanges();
+        }
+
+        public List<Reservation> RequestAllReservationsForCustomer(int id)
+        {
+            return _context.Reservations
+                .AsNoTracking()
+                .Where(u => u.Customer.Id == id)
+                .Include(r => r.Flight)
+                .ThenInclude(f => f.StartingCity)
+                .Include(r => r.Flight)
+                .ThenInclude(f => f.DestinationCity)
+                .Include(r => r.Flight)
+                .ThenInclude(f => f.Transfer)
+                .ToList();
+        }
     }
 }

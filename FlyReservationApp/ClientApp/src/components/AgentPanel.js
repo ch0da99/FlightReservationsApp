@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connectionSignalR } from "../api/signalR/config.js";
-import { SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST } from "../api/signalR/remoteProcedures.js";
+import {
+  SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST,
+  SIGNALR_AGENT_APPROVE_RESERVATION_REQUEST,
+  ID_REQUEST,
+} from "../api/signalR/remoteProcedures.js";
+import {
+  IS_USER_CONNECTED,
+  ALL_RESERVATIONS_RESPONSE,
+  NEW_RESERVATION_APPROVE,
+} from "../api/signalR/responseProcedures.js";
 import { connect } from "react-redux";
 import "../style/css/AgentPanel.css";
 import {
@@ -14,29 +23,46 @@ const AgentPanel = ({
   fetchReservations,
   approveCustomerReservation,
 }) => {
-  console.log(reservations);
+  useEffect(() => {
+    if (
+      reservations.length === 0 &&
+      connectionSignalR.state !== "Disconnected"
+    ) {
+      connectionSignalR
+        .invoke(SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST)
+        .catch((error) => console.log(error));
+    }
+  }, []);
   const ApproveReservationClick = (idReservation) => {
-    connectionSignalR.invoke("ApproveReservationRequest", idReservation);
+    console.log(idReservation);
+    connectionSignalR
+      .invoke(SIGNALR_AGENT_APPROVE_RESERVATION_REQUEST, idReservation)
+      .catch((error) => console.log(error));
   };
   if (connectionSignalR.state === "Disconnected") {
+    console.log(user.id);
     connectionSignalR
       .start()
       .then(() => {
         connectionSignalR
-          .invoke("IDresponse", user.id)
+          .invoke(ID_REQUEST, user.id)
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
   }
-  connectionSignalR.on("IsConnected", (connected) => {
-    connectionSignalR
-      .invoke(SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST)
-      .catch((error) => console.log("greska"));
+  connectionSignalR.on(IS_USER_CONNECTED, (connected) => {
+    console.log(connected);
+    if (connected) {
+      connectionSignalR
+        .invoke(SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST)
+        .catch((error) => console.log(error));
+    }
   });
-  connectionSignalR.on("AllReservationsResponse", (reservations) => {
+  connectionSignalR.on(ALL_RESERVATIONS_RESPONSE, (reservations) => {
+    console.log(reservations);
     fetchReservations(reservations);
   });
-  connectionSignalR.on("NewReservationApprove", (id) => {
+  connectionSignalR.on(NEW_RESERVATION_APPROVE, (id) => {
     if (id !== 0) {
       approveCustomerReservation(id);
     } else {
@@ -58,7 +84,11 @@ const AgentPanel = ({
             <ul className="list-inline">
               <li>
                 {reservation.flight.startingCity.name} ---{">"}{" "}
-                {reservation.flight.transfer && <span className="transfer_city">{reservation.flight.transfer.name}  ---> </span>}
+                {reservation.flight.transfer && (
+                  <span className="transfer_city">
+                    {reservation.flight.transfer.name} ---{">"}
+                  </span>
+                )}
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
@@ -71,7 +101,6 @@ const AgentPanel = ({
               <li>
                 <button
                   onClick={() => {
-                    console.log(reservation.id);
                     ApproveReservationClick(reservation.id);
                   }}
                 >
@@ -99,6 +128,24 @@ const AgentPanel = ({
               <li>
                 {reservation.customer.username}: {reservation.quantity} ticket/s
               </li>
+            </ul>
+          </div>
+        ))}
+      <h1>Canceled flights</h1>
+      {reservations
+        .filter((r) => r.flight.canceled)
+        .map((reservation) => (
+          <div className="reservation canceled" key={reservation.id}>
+            <ul className="list-inline">
+              <li>
+                {reservation.flight.startingCity.name} ---{">"}{" "}
+                {reservation.flight.destinationCity.name}
+              </li>
+              <li>
+                {reservation.flight.departureTime} ---
+                {">"} {reservation.flight.arrivalTime}
+              </li>
+              <li>{reservation.quantity} ticket/s</li>
             </ul>
           </div>
         ))}

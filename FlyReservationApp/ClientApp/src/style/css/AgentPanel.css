@@ -16,7 +16,11 @@
   display: none;
 }
 
-.transfer_city{
+.transfer_city {
   font-size: large;
   color: #a3a3a3;
+}
+
+.canceled {
+  background-color: gray;
 }

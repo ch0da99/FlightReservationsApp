@@ -13,7 +13,7 @@ namespace FlightReservationsApp.Hubs
     {
         private FlightReservationsRepository repository = FlightReservationsRepository.Repository;
         public static Dictionary<int, string> connectedUsers = new Dictionary<int, string>();
-        public async Task IDresponse(int userId)
+        public async Task IdRequest(int userId)
         {
             connectedUsers.Add(userId, Context.ConnectionId);
             await Clients.Caller.SendAsync("IsConnected", true);
@@ -27,7 +27,7 @@ namespace FlightReservationsApp.Hubs
             }
             catch (Exception)
             {
-              
+
             }
             return base.OnDisconnectedAsync(exception);
         }
@@ -47,6 +47,38 @@ namespace FlightReservationsApp.Hubs
         {
             List<City> cities = repository.RequestAllCities();
             await Clients.All.SendAsync("AllCitiesResponse", cities);
+        }
+        public async Task AgentNewFlight(int userId, int allSeats, string arrivalTime,
+            string departureTime, City startingCity, City destinationCity, City transferCity)
+        {
+            Flight newFlight = new Flight()
+            {
+                Agent = repository.GetAgentById(userId),
+                AllSeats = allSeats,
+                ArrivalTime = DateTime.Parse(arrivalTime),
+                DepartureTime = DateTime.Parse(departureTime),
+                //StartingCity = startingCity,
+                //DestinationCity = startingCity,
+                //Transfer = transferCity,
+                Canceled = false,
+                TakenSeats = 0
+            };
+            try
+            {
+                repository.AddNewFlight(newFlight);
+                await Clients.Caller.SendAsync("AddNewFlightResponse", true);
+                await Clients.All.SendAsync("NewFlight", newFlight);
+            }
+            catch (Exception)
+            {
+                await Clients.All.SendAsync("AddNewFlightResponse", false);
+            }
+        }
+
+        public async Task UserAllReservations(int userId)
+        {
+            List<Reservation> reservations = repository.RequestAllReservationsForCustomer(userId);
+            await Clients.Caller.SendAsync("UserAllReservationsResponse", reservations);
         }
     }
 }

@@ -1,15 +1,15 @@
 import * as types from "../actions/actionTypes";
 import initialState from "../initialstate";
 
-const AgentReducer = (state = initialState, action) => {
+const CustomerReducer = (state = initialState, action) => {
   console.log(action);
   switch (action.type) {
-    case types.AGENT_ALL_RESERVATIONS_SUCCESS:
+    case types.CUSTOMER_ALL_RESERVATIONS_SUCCESS:
       return {
         ...state,
-        reservations: action.response,
+        reservations: action.reservations,
       };
-    case types.AGENT_APPROVE_RESERVATION_SUCCESS:
+    case types.USER_RESERVATION_APPROVED_SUCCESS:
       let index = state.reservations.indexOf(
         state.reservations.filter((r) => r.id == action.id)[0]
       );
@@ -21,14 +21,9 @@ const AgentReducer = (state = initialState, action) => {
           ...state.reservations.slice(index + 1),
         ],
       };
-    case types.AGENT_GET_ALL_CITIES_SUCCESS:
-      return {
-        ...state,
-        cities: action.cities,
-      };
     default:
       return state;
   }
 };
 
-export default AgentReducer;
+export default CustomerReducer;

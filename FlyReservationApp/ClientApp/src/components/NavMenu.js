@@ -47,16 +47,24 @@ const NavMenu = ({ user }) => {
                   Home
                 </NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink
-                  tag={Link}
-                  className="text-dark"
-                  to="/addNewFlight"
-                  disabled={user == null}
-                >
-                  New Flight
-                </NavLink>
-              </NavItem>
+              {user.role == "Agent" && (
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/addNewFlight">
+                    New Flight
+                  </NavLink>
+                </NavItem>
+              )}
+              {user.role == "Customer" && (
+                <NavItem>
+                  <NavLink
+                    tag={Link}
+                    className="text-dark"
+                    to="/addNewReservation"
+                  >
+                    New Reservation
+                  </NavLink>
+                </NavItem>
+              )}
             </ul>
             {/* <ul className="navbar-nav flex-grow">
               <NavItem>
