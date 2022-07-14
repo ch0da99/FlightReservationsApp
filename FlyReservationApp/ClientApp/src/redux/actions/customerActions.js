@@ -5,8 +5,13 @@ export const customerAllReservationsSuccess = (reservations) => {
 };
 
 export const approvedReservationSuccess = (id) => {
-  return { type: types.USER_RESERVATION_APPROVED_SUCCESS, id };
+  return { type: types.CUSTOMER_RESERVATION_APPROVED_SUCCESS, id };
 };
+
+export const getAllFlightsSuccess = (flights) => {
+  return { type: types.CUSTOMER_ALL_FLIGHTS_SUCCESS, flights };
+};
+
 
 export const getAllReservationsForCustomer = (reservations) => {
   console.log(reservations);
@@ -19,5 +24,12 @@ export const approvedReservation = (id) => {
   return async (dispatch) => {
     console.log(id);
     dispatch(approvedReservationSuccess(id));
+  };
+};
+
+export const getAllFlights = (flights) => {
+  console.log(flights)
+  return async (dispatch) => {
+    dispatch(getAllFlightsSuccess(flights));
   };
 };

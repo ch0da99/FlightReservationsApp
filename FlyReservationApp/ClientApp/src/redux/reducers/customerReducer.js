@@ -21,6 +21,11 @@ const CustomerReducer = (state = initialState, action) => {
           ...state.reservations.slice(index + 1),
         ],
       };
+      case types.CUSTOMER_ALL_FLIGHTS_SUCCESS:
+        return {
+          ...state,
+          flights: action.flights
+        }
     default:
       return state;
   }

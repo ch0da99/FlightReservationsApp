@@ -75,10 +75,30 @@ namespace FlightReservationsApp.Hubs
             }
         }
 
-        public async Task UserAllReservations(int userId)
+        public async Task CustomerAllReservations(int userId)
         {
             List<Reservation> reservations = repository.RequestAllReservationsForCustomer(userId);
             await Clients.Caller.SendAsync("UserAllReservationsResponse", reservations);
+        }
+
+        public async Task AllActiveFlights()
+        {
+            List<Flight> flights = repository.RequestAllActiveFlights();
+            await Clients.Caller.SendAsync("AllFlightsAvailableForReservation", flights);
+        }
+
+        public async Task NewReservation(int quantity, int userId, int flightId)
+        {
+            Customer customer = repository.GetCustomerById(userId);
+            Flight flight = repository.GetFlightById(flightId);
+            Reservation reservation = new Reservation()
+            {
+                Customer = customer,
+                Flight = flight,
+                Quantity = quantity,
+            };
+            bool result = repository.AddNewReservationRequest(reservation); 
+            await Clients.All.SendAsync("NewReservationCreatedResponse", result);
         }
     }
 }

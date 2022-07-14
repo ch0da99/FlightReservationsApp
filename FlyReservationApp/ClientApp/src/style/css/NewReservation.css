@@ -1,0 +1,14 @@
+.flight {
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+    font-size: x-large;
+    padding: 50px;
+  }
+  
+  .list-inline li {
+    padding-right: 100px;
+    display: inline-block;
+  }
+
+  .last-3-days{
+    background-color: #b3b3b3;
+  }

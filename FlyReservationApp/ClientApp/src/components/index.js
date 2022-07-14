@@ -6,6 +6,7 @@ import AgentPanel from "./AgentPanel";
 import Home from "./Home";
 import NavMenu from "./NavMenu";
 import NewFlight from "./NewFlight";
+import NewReservation from "./NewReservation";
 
 export {
   Login,
@@ -16,4 +17,5 @@ export {
   Home,
   NavMenu,
   NewFlight,
+  NewReservation
 };

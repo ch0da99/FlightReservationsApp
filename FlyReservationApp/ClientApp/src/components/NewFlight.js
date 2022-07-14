@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { connectionSignalR } from "../api/signalR/config";
 import { getAllCities } from "../redux/actions/agentActions";
+import { ID_REQUEST, ALL_CITIES_REQUEST } from "../api/signalR/remoteProcedures";
+import { IS_USER_CONNECTED, ALL_CITIES_RESPONSE, ADD_NEW_FLIGHT_RESPONSE } from "../api/signalR/responseProcedures";
 
 const NewFlight = ({ user, cities, loadAllCities }) => {
   const [startingCity, setStartingCity] = useState();
@@ -13,9 +15,10 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
   const [availableSeats, setAvailableSeats] = useState();
 
   useEffect(() => {
-    if (cities.length === 0) {
+    if (cities.length === 0 &&
+      connectionSignalR.state === "Connected") {
       connectionSignalR
-        .invoke("AllCities")
+        .invoke(ALL_CITIES_REQUEST)
         .catch((error) => console.log(error));
     }
   }, []);
@@ -36,7 +39,7 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
     ) {
       connectionSignalR
         .invoke(
-          "AgentNewFlight",
+          ADD_NEW_FLIGHT_REQUEST,
           user.id,
           parseInt(availableSeats),
           new Date(arrivalDate).toISOString(),
@@ -50,30 +53,30 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
       alert("Not all fields are filled in!");
     }
   };
-  if (connectionSignalR.state === "Disconnected") {
+  if (connectionSignalR.state !== "Connected") {
     connectionSignalR
       .start()
       .then(() => {
         connectionSignalR
-          .invoke("IDresponse", user.id)
+          .invoke(ID_REQUEST, user.id)
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
   }
-  connectionSignalR.on("IsConnected", (connected) => {
+  connectionSignalR.on(IS_USER_CONNECTED, (connected) => {
     if (connected) {
       connectionSignalR
-        .invoke("AllCities")
+        .invoke(ALL_CITIES_REQUEST)
         .catch((error) => console.log(error));
     }
   });
-  connectionSignalR.on("AllCitiesResponse", (citiesResponse) => {
+  connectionSignalR.on(ALL_CITIES_RESPONSE, (citiesResponse) => {
     loadAllCities(citiesResponse);
     setStartingCity(citiesResponse[0].id);
     setDestinationCity(citiesResponse[0].id);
     setTransferCity(citiesResponse[0].id);
   });
-  connectionSignalR.on("AddNewFlightResponse", (response) => {
+  connectionSignalR.on(ADD_NEW_FLIGHT_RESPONSE, (response) => {
     if (response) {
       console.log("Successfull");
     } else {

@@ -12,6 +12,7 @@ import {
   AgentPanel,
   Home,
   NewFlight,
+  NewReservation
 } from "./components/index";
 
 import "./custom.css";
@@ -39,6 +40,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedRoute requiredRole={"Agent"} />}>
             <Route path="/addNewFlight" element={<NewFlight />} />
+          </Route>
+          <Route element={<ProtectedRoute requiredRole={"Customer"} />}>
+            <Route path="/addNewReservation" element={<NewReservation />} />
           </Route>
         </Route>
       </Routes>

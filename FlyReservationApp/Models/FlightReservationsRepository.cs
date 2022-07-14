@@ -58,15 +58,14 @@ namespace FlightReservationsApp.Models
             }
         }
 
-        public List<Flight> RequestAllFlightsWithNoReservationForUser(int id)
+        public List<Flight> RequestAllActiveFlights()
         {
-            List<Flight> flights = _context.Reservations
-                .Include(r => r.Customer)
-                .Include(r => r.Flight)
-                .Where(r => r.Customer.Id != id)
-                .Select(r => r.Flight)
+            return _context.Flights
+                .Where(f => !f.Canceled)
+                .Include(f => f.DestinationCity)
+                .Include(f => f.StartingCity)
+                .Include(f => f.Transfer)
                 .ToList();
-            return flights;
         }
 
         public List<City> RequestAllCities()
@@ -105,6 +104,30 @@ namespace FlightReservationsApp.Models
                 .Include(r => r.Flight)
                 .ThenInclude(f => f.Transfer)
                 .ToList();
+        }
+
+        public Customer GetCustomerById(int id)
+        {
+            return (Customer)_context.Users.Where(u => u.Id == id).FirstOrDefault();
+        }
+
+        public Flight GetFlightById(int id)
+        {
+            return _context.Flights.Where(f => f.Id == id).FirstOrDefault();
+        }
+
+        public bool AddNewReservationRequest(Reservation reservation)
+        {
+            try
+            {
+                _context.Reservations.Add(reservation);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
