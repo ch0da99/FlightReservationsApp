@@ -28,7 +28,6 @@ const Home = ({ user }) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: state.LoginReducer.user ? state.LoginReducer.user : [],
   };

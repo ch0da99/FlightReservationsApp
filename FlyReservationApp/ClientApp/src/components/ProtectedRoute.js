@@ -14,7 +14,6 @@ const ProtectedRoute = ({ user, requiredRole = null }) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: state.LoginReducer.user ? state.LoginReducer.user : null,
   };

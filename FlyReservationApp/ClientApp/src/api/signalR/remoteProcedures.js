@@ -4,6 +4,11 @@ export const SIGNALR_AGENT_APPROVE_RESERVATION_REQUEST =
 export const ID_REQUEST = "IdRequest";
 export const ADD_NEW_FLIGHT_REQUEST = "AgentNewFlight";
 export const ALL_CITIES_REQUEST = "AllCities";
-export const SIGNALR_CUSTOMER_ALL_RESERVATIONS_REQUEST = "CustomerAllReservations";
+export const SIGNALR_CUSTOMER_ALL_RESERVATIONS_REQUEST =
+  "CustomerAllReservations";
 export const ALL_FLIGHTS_AVAILABLE_FOR_RESERVATION_REQUEST = "AllActiveFlights";
-export const CREATE_NEW_RESERVATION_REQUEST = "NewReservation"
+export const CREATE_NEW_RESERVATION_REQUEST = "NewReservation";
+export const NEW_USER_CREATE_REQUEST = "NewUser";
+export const ALL_FLIGHTS_REQUEST = "AllFlights";
+export const CANCEL_FLIGHT_REQUEST = "CancelFlight";
+export const ADMINISTRATOR_NEW_USER_CREATE_REQUEST = "NewUser";

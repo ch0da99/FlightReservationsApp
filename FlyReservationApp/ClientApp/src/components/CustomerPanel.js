@@ -8,12 +8,14 @@ import {
   IS_USER_CONNECTED,
   ALL_USER_RESERVATIONS_RESPONSE,
   NEW_RESERVATION_APPROVE,
+  CANCEL_FLIGHT_RESPONSE,
 } from "../api/signalR/responseProcedures.js";
 import { connect } from "react-redux";
 import "../style/css/CustomerPanel.css";
 import {
   getAllReservationsForCustomer,
   approvedReservation,
+  cancelFlight,
 } from "../redux/actions/customerActions.js";
 
 const CustomerPanel = ({
@@ -21,12 +23,10 @@ const CustomerPanel = ({
   reservations,
   fetchReservations,
   approveReservationFromAgent,
+  cancelFlightDispatch,
 }) => {
   useEffect(() => {
-    if (
-      reservations.length === 0 &&
-      connectionSignalR.state !== "Disconnected"
-    ) {
+    if (connectionSignalR.state !== "Disconnected") {
       connectionSignalR
         .invoke(SIGNALR_CUSTOMER_ALL_RESERVATIONS_REQUEST, user.id)
         .catch((error) => console.log(error));
@@ -55,14 +55,13 @@ const CustomerPanel = ({
     fetchReservations(reservations);
   });
   connectionSignalR.on(NEW_RESERVATION_APPROVE, (idR) => {
-    console.log(reservations.filter((r) => r.id == idR).length);
-    //console.log(reservations.filter((r) => r.id == idR).length == 1);
     if (idR !== 0 && reservations.filter((r) => r.id == idR).length === 1) {
-      console.log("bum");
       approveReservationFromAgent(idR);
     }
   });
-
+  connectionSignalR.on(CANCEL_FLIGHT_RESPONSE, (id) => {
+    cancelFlightDispatch(id);
+  });
   return (
     <div>
       <h1>Waiting for approval</h1>
@@ -97,6 +96,11 @@ const CustomerPanel = ({
             <ul className="list-inline">
               <li>
                 {reservation.flight.startingCity.name} ---{">"}{" "}
+                {reservation.flight.transfer && (
+                  <span className="transfer_city">
+                    {reservation.flight.transfer.name} ---{">"}
+                  </span>
+                )}
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
@@ -115,6 +119,11 @@ const CustomerPanel = ({
             <ul className="list-inline">
               <li>
                 {reservation.flight.startingCity.name} ---{">"}{" "}
+                {reservation.flight.transfer && (
+                  <span className="transfer_city">
+                    {reservation.flight.transfer.name} ---{">"}
+                  </span>
+                )}
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
@@ -143,6 +152,7 @@ const mapDispatchToProps = {
   fetchReservations: (reservations) =>
     getAllReservationsForCustomer(reservations),
   approveReservationFromAgent: (id) => approvedReservation(id),
+  cancelFlightDispatch: (id) => cancelFlight(id),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerPanel);

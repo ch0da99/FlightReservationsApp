@@ -49,7 +49,7 @@ namespace FlightReservationsApp.Hubs
             await Clients.All.SendAsync("AllCitiesResponse", cities);
         }
         public async Task AgentNewFlight(int userId, int allSeats, string arrivalTime,
-            string departureTime, City startingCity, City destinationCity, City transferCity)
+            string departureTime, int startingCityId, int destinationCityId, int transferCityId)
         {
             Flight newFlight = new Flight()
             {
@@ -57,22 +57,15 @@ namespace FlightReservationsApp.Hubs
                 AllSeats = allSeats,
                 ArrivalTime = DateTime.Parse(arrivalTime),
                 DepartureTime = DateTime.Parse(departureTime),
-                //StartingCity = startingCity,
-                //DestinationCity = startingCity,
-                //Transfer = transferCity,
+                StartingCity = repository.GetCityById(startingCityId),
+                DestinationCity = repository.GetCityById(destinationCityId),
+                Transfer = repository.GetCityById(transferCityId),
                 Canceled = false,
                 TakenSeats = 0
             };
-            try
-            {
-                repository.AddNewFlight(newFlight);
-                await Clients.Caller.SendAsync("AddNewFlightResponse", true);
-                await Clients.All.SendAsync("NewFlight", newFlight);
-            }
-            catch (Exception)
-            {
-                await Clients.All.SendAsync("AddNewFlightResponse", false);
-            }
+
+            Flight result = repository.AddNewFlight(newFlight);
+            await Clients.All.SendAsync("AddNewFlightResponse", result);
         }
 
         public async Task CustomerAllReservations(int userId)
@@ -97,8 +90,26 @@ namespace FlightReservationsApp.Hubs
                 Flight = flight,
                 Quantity = quantity,
             };
-            bool result = repository.AddNewReservationRequest(reservation); 
+            Reservation result = repository.AddNewReservationRequest(reservation); 
             await Clients.All.SendAsync("NewReservationCreatedResponse", result);
+        }
+
+        public async Task NewUser(string username, string password, string role)
+        {
+            User user = repository.CreateNewUserRequest(username, password, role);
+            await Clients.Caller.SendAsync("NewUserResponse", user);
+        }
+
+        public async Task AllFlights()
+        {
+            List<Flight> flights = repository.RequestAllFlights();
+            await Clients.Caller.SendAsync("AllFlightsResponse", flights);
+        }
+
+        public async Task CancelFlight(int id)
+        {
+            int result = repository.CancelFlight(id);
+            await Clients.All.SendAsync("CancelFlightResponse", result);
         }
     }
 }

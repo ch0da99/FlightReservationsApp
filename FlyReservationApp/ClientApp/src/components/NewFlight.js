@@ -3,8 +3,16 @@ import { connect } from "react-redux";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { connectionSignalR } from "../api/signalR/config";
 import { getAllCities } from "../redux/actions/agentActions";
-import { ID_REQUEST, ALL_CITIES_REQUEST } from "../api/signalR/remoteProcedures";
-import { IS_USER_CONNECTED, ALL_CITIES_RESPONSE, ADD_NEW_FLIGHT_RESPONSE } from "../api/signalR/responseProcedures";
+import {
+  ID_REQUEST,
+  ALL_CITIES_REQUEST,
+  ADD_NEW_FLIGHT_REQUEST,
+} from "../api/signalR/remoteProcedures";
+import {
+  IS_USER_CONNECTED,
+  ALL_CITIES_RESPONSE,
+  ADD_NEW_FLIGHT_RESPONSE,
+} from "../api/signalR/responseProcedures";
 
 const NewFlight = ({ user, cities, loadAllCities }) => {
   const [startingCity, setStartingCity] = useState();
@@ -15,8 +23,7 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
   const [availableSeats, setAvailableSeats] = useState();
 
   useEffect(() => {
-    if (cities.length === 0 &&
-      connectionSignalR.state === "Connected") {
+    if (cities.length === 0 && connectionSignalR.state === "Connected") {
       connectionSignalR
         .invoke(ALL_CITIES_REQUEST)
         .catch((error) => console.log(error));
@@ -44,9 +51,9 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
           parseInt(availableSeats),
           new Date(arrivalDate).toISOString(),
           new Date(departureDate).toISOString(),
-          cities.filter((c) => c.id == startingCity)[0],
-          cities.filter((c) => c.id == destinationCity)[0],
-          cities.filter((c) => c.id == transferCity)[0]
+          cities.filter((c) => c.id == startingCity)[0].id,
+          cities.filter((c) => c.id == destinationCity)[0].id,
+          cities.filter((c) => c.id == transferCity)[0].id
         )
         .catch((error) => console.log(error));
     } else {
@@ -78,9 +85,9 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
   });
   connectionSignalR.on(ADD_NEW_FLIGHT_RESPONSE, (response) => {
     if (response) {
-      console.log("Successfull");
+      //alert("Successfuly added new flight!");
     } else {
-      console.log("Failed");
+      //alert("Failed to add new flight. Please try again.");
     }
   });
   return (
@@ -171,12 +178,6 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
             ))}
           </Input>
         </FormGroup>
-        {/* <FormGroup check>
-        <Label check>
-          <Input type="checkbox" />{' '}
-          Check me out
-        </Label>
-      </FormGroup> */}
         <Button onClick={createClick}>Create</Button>
       </Form>
     </div>

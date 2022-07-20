@@ -7,6 +7,7 @@ import Home from "./Home";
 import NavMenu from "./NavMenu";
 import NewFlight from "./NewFlight";
 import NewReservation from "./NewReservation";
+import NewUser from "./NewUser";
 
 export {
   Login,
@@ -17,5 +18,6 @@ export {
   Home,
   NavMenu,
   NewFlight,
-  NewReservation
+  NewReservation,
+  NewUser,
 };

@@ -76,20 +76,28 @@ namespace FlightReservationsApp.Models
 
         public User GetAgentById(int id)
         {
-            User user = _context.Users.AsNoTracking().Where(u => u.Id == id).FirstOrDefault();
+            User user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
             return user;
         }
 
         public City GetCityById(int id)
         {
-            City user = _context.Cities.AsNoTracking().Where(c => c.Id == id).FirstOrDefault();
-            return user;
+            City city = _context.Cities.Where(c => c.Id == id).FirstOrDefault();
+            return city;
         }
 
-        public void AddNewFlight(Flight flight)
+        public Flight AddNewFlight(Flight flight)
         {
-            _context.Flights.Add(flight);
-            _context.SaveChanges();
+            try
+            {
+                _context.Flights.Add(flight);
+                _context.SaveChanges();
+                return flight;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public List<Reservation> RequestAllReservationsForCustomer(int id)
@@ -116,17 +124,71 @@ namespace FlightReservationsApp.Models
             return _context.Flights.Where(f => f.Id == id).FirstOrDefault();
         }
 
-        public bool AddNewReservationRequest(Reservation reservation)
+        public Reservation AddNewReservationRequest(Reservation reservation)
         {
             try
             {
                 _context.Reservations.Add(reservation);
                 _context.SaveChanges();
-                return true;
+                return reservation;
             }
             catch
             {
-                return false;
+                return null;
+            }
+        }
+
+        public User CreateNewUserRequest(string username, string password, string role)
+        {
+            User user;
+            if (role == "Customer")
+            {
+                user = new Customer();
+            }
+            else if(role == "Agent")
+            {
+                user = new Agent();
+            }
+            else
+            {
+                return null;
+            }
+            try
+            {
+                user.Username = username;
+                user.Password = password;
+                user.Role = role;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public List<Flight> RequestAllFlights()
+        {
+            return _context.Flights
+                .Include(f => f.StartingCity)
+                .Include(f => f.DestinationCity)
+                .Include(f => f.Transfer)
+                .Include(f => f.Agent)
+                .ToList();
+        }
+
+        public int CancelFlight(int id)
+        {
+            try
+            {
+                _context.Flights.Where(f => f.Id == id).FirstOrDefault().Canceled = true;
+                _context.SaveChanges();
+                return id;
+            }
+            catch
+            {
+                return 0;
             }
         }
     }

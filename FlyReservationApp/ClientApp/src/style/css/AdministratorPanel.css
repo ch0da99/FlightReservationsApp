@@ -9,10 +9,6 @@
   display: inline-block;
 }
 
-.last-3-days {
-  background-color: #b3b3b3;
-}
-
-.filter-section {
-  border: 1px solid green;
+.canceled {
+  background-color: gray;
 }

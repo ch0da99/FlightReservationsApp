@@ -9,12 +9,16 @@ import {
   IS_USER_CONNECTED,
   ALL_RESERVATIONS_RESPONSE,
   NEW_RESERVATION_APPROVE,
+  NEW_RESERVATION_CREATED_RESPONSE,
+  CANCEL_FLIGHT_RESPONSE,
 } from "../api/signalR/responseProcedures.js";
 import { connect } from "react-redux";
 import "../style/css/AgentPanel.css";
 import {
   getAllReservationsForAgent,
   approveReservation,
+  newReservationCreatedFromCustomer,
+  cancelFlight,
 } from "../redux/actions/agentActions.js";
 
 const AgentPanel = ({
@@ -22,6 +26,8 @@ const AgentPanel = ({
   reservations,
   fetchReservations,
   approveCustomerReservation,
+  updateReservations,
+  cancelFlightDispatch,
 }) => {
   useEffect(() => {
     if (
@@ -59,7 +65,6 @@ const AgentPanel = ({
     }
   });
   connectionSignalR.on(ALL_RESERVATIONS_RESPONSE, (reservations) => {
-    console.log(reservations);
     fetchReservations(reservations);
   });
   connectionSignalR.on(NEW_RESERVATION_APPROVE, (id) => {
@@ -73,12 +78,18 @@ const AgentPanel = ({
       );
     }
   });
+  connectionSignalR.on(NEW_RESERVATION_CREATED_RESPONSE, (reservation) => {
+    updateReservations(reservation);
+  });
+  connectionSignalR.on(CANCEL_FLIGHT_RESPONSE, (id) => {
+    cancelFlightDispatch(id);
+  });
 
   return (
     <div>
       <h1>Pending reservations</h1>
       {reservations
-        .filter((r) => !r.approved)
+        .filter((r) => !r.approved && !r.flight.canceled)
         .map((reservation) => (
           <div className="reservation" key={reservation.id}>
             <ul className="list-inline">
@@ -113,12 +124,17 @@ const AgentPanel = ({
       <hr></hr>
       <h1>Approved reservations</h1>
       {reservations
-        .filter((r) => r.approved)
+        .filter((r) => r.approved && !r.flight.canceled)
         .map((reservation) => (
           <div className="reservation approved" key={reservation.id}>
             <ul className="list-inline">
               <li>
                 {reservation.flight.startingCity.name} ---{">"}{" "}
+                {reservation.flight.transfer && (
+                  <span className="transfer_city">
+                    {reservation.flight.transfer.name} ---{">"}
+                  </span>
+                )}
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
@@ -139,6 +155,11 @@ const AgentPanel = ({
             <ul className="list-inline">
               <li>
                 {reservation.flight.startingCity.name} ---{">"}{" "}
+                {reservation.flight.transfer && (
+                  <span className="transfer_city">
+                    {reservation.flight.transfer.name} ---{">"}
+                  </span>
+                )}
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
@@ -154,7 +175,6 @@ const AgentPanel = ({
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: state.LoginReducer.user ? state.LoginReducer.user : null,
     reservations: state.AgentReducer.reservations
@@ -166,6 +186,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   fetchReservations: (reservations) => getAllReservationsForAgent(reservations),
   approveCustomerReservation: (id) => approveReservation(id),
+  updateReservations: (reservation) =>
+    newReservationCreatedFromCustomer(reservation),
+  cancelFlightDispatch: (id) => cancelFlight(id),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentPanel);

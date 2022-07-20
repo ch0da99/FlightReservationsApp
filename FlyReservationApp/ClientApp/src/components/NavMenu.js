@@ -65,6 +65,13 @@ const NavMenu = ({ user }) => {
                   </NavLink>
                 </NavItem>
               )}
+              {user.role == "Administrator" && (
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/addNewUser">
+                    New User
+                  </NavLink>
+                </NavItem>
+              )}
             </ul>
             {/* <ul className="navbar-nav flex-grow">
               <NavItem>
@@ -91,7 +98,6 @@ const NavMenu = ({ user }) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: state.LoginReducer.user ? state.LoginReducer.user : [],
   };
