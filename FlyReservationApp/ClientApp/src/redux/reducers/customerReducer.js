@@ -2,7 +2,6 @@ import * as types from "../actions/actionTypes";
 import initialState from "../initialstate";
 
 const CustomerReducer = (state = initialState, action) => {
-  console.log(state);
   switch (action.type) {
     case types.CUSTOMER_ALL_RESERVATIONS_SUCCESS:
       return {
@@ -48,10 +47,6 @@ const CustomerReducer = (state = initialState, action) => {
       let indexR = state.reservations?.indexOf(
         state.reservations.filter((r) => r.flight.id == action.id)[0]
       );
-      console.log(state.flights);
-      console.log(action.id);
-      console.log(indexF);
-      console.log(indexR);
       return {
         ...state,
         flights:
@@ -79,6 +74,27 @@ const CustomerReducer = (state = initialState, action) => {
                 ]
               : []
             : state.reservations,
+      };
+    case types.CUSTOMER_UPDATE_TAKEN_SEATS_ON_FLIGHT_SUCCESS:
+      console.log(state);
+      if (state.updatedReservation == action.reservation) {
+        return state;
+      }
+      let index2 = state.flights?.indexOf(
+        state.flights.filter((f) => f.id == action.reservation.flight.id)[0]
+      );
+      return {
+        ...state,
+        flights: [
+          ...state.flights.slice(0, index2),
+          {
+            ...state.flights[index2],
+            takenSeats:
+              state.flights[index2].takenSeats + action.reservation.quantity,
+          },
+          ...state.flights.slice(index2 + 1),
+        ],
+        updatedReservation: action.reservation,
       };
     default:
       return state;

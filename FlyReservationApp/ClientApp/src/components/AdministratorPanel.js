@@ -3,6 +3,7 @@ import {
   allFlights,
   cancelFlight,
   newFlightCreatedFromAgent,
+  updateTakenSeats,
 } from "../redux/actions/administratorActions";
 import { connectionSignalR } from "../api/signalR/config";
 import {
@@ -15,6 +16,7 @@ import {
   IS_USER_CONNECTED,
   CANCEL_FLIGHT_RESPONSE,
   ADD_NEW_FLIGHT_RESPONSE,
+  NEW_RESERVATION_CREATED_RESPONSE,
 } from "../api/signalR/responseProcedures";
 import "../style/css/AdministratorPanel.css";
 import { connect } from "react-redux";
@@ -25,6 +27,7 @@ const AdministratorPanel = ({
   loadFlights,
   cancelFlightDispatch,
   newFlightCreate,
+  takenSeatsChange,
 }) => {
   useEffect(() => {
     if (flights.length === 0 && connectionSignalR.state !== "Disconnected") {
@@ -66,6 +69,10 @@ const AdministratorPanel = ({
   });
   connectionSignalR.on(ADD_NEW_FLIGHT_RESPONSE, (flight) => {
     newFlightCreate(flight);
+  });
+  connectionSignalR.on(NEW_RESERVATION_CREATED_RESPONSE, (reservation) => {
+    console.log(reservation);
+    takenSeatsChange(reservation);
   });
   return (
     <div>
@@ -137,6 +144,7 @@ const mapDispatchToProps = {
   loadFlights: (flights) => allFlights(flights),
   cancelFlightDispatch: (flights) => cancelFlight(flights),
   newFlightCreate: (flight) => newFlightCreatedFromAgent(flight),
+  takenSeatsChange: (reservation) => updateTakenSeats(reservation),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdministratorPanel);

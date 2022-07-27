@@ -6,6 +6,7 @@ import {
   getAllFlights,
   newFlightCreatedFromAgent,
   cancelFlight,
+  updateTakenSeats,
 } from "../redux/actions/customerActions";
 import {
   IS_USER_CONNECTED,
@@ -32,6 +33,7 @@ const NewFlight = ({
   newFlightCreate,
   loadAllCities,
   cancelFlightDispatch,
+  takenSeatsChange,
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [filterStartingCity, setFilterStartingCity] = useState("All");
@@ -49,9 +51,6 @@ const NewFlight = ({
     }
   }, []);
   const createReservationClick = (flightId) => {
-    console.log(quantity);
-    console.log(user.id);
-    console.log(flightId);
     connectionSignalR.invoke(
       CREATE_NEW_RESERVATION_REQUEST,
       quantity,
@@ -87,6 +86,7 @@ const NewFlight = ({
     }
   );
   connectionSignalR.on(NEW_RESERVATION_CREATED_RESPONSE, (reservation) => {
+    takenSeatsChange(reservation);
     reservation.preventDefault();
     if (reservation != null) {
       alert("Successfuly added new reservation!");
@@ -188,7 +188,7 @@ const NewFlight = ({
                       max={flight.allSeats - flight.takenSeats}
                       defaultValue={1}
                       onChange={(e) => {
-                        setQuantity(e.target.value);
+                        setQuantity(parseInt(e.target.value));
                       }}
                     ></Input>
                   </li>
@@ -223,6 +223,7 @@ const mapDispatchToProps = {
   newFlightCreate: (flight) => newFlightCreatedFromAgent(flight),
   loadAllCities: (cities) => getAllCities(cities),
   cancelFlightDispatch: (id) => cancelFlight(id),
+  takenSeatsChange: (reservation) => updateTakenSeats(reservation),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewFlight);

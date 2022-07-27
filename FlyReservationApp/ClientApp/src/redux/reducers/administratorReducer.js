@@ -9,7 +9,6 @@ const AdministratorReducer = (state = initialState, action) => {
         flights: action.flights,
       };
     case types.ADMINISTRATOR_CANCEL_FLIGHT_SUCCESS:
-      console.log(action.id);
       let index = state.flights?.indexOf(
         state.flights.filter((f) => f.id == action.id)[0]
       );
@@ -33,6 +32,26 @@ const AdministratorReducer = (state = initialState, action) => {
               ? [...state.flights, action.flight]
               : [...state.flights]
             : [action.flight],
+      };
+    case types.ADMINISTRATOR_UPDATE_TAKEN_SEATS_ON_FLIGHT_SUCCESS:
+      if (state.updatedReservation == action.reservation) {
+        return state;
+      }
+      let index2 = state.flights?.indexOf(
+        state.flights.filter((f) => f.id == action.reservation.flight.id)[0]
+      );
+      return {
+        ...state,
+        flights: [
+          ...state.flights.slice(0, index2),
+          {
+            ...state.flights[index2],
+            takenSeats:
+              state.flights[index2].takenSeats + action.reservation.quantity,
+          },
+          ...state.flights.slice(index2 + 1),
+        ],
+        updatedReservation: action.reservation,
       };
     default:
       return state;

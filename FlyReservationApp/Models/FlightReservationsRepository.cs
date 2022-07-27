@@ -129,6 +129,7 @@ namespace FlightReservationsApp.Models
             try
             {
                 _context.Reservations.Add(reservation);
+                _context.Flights.Where(f => f.Id == reservation.Flight.Id).FirstOrDefault().TakenSeats += reservation.Quantity;
                 _context.SaveChanges();
                 return reservation;
             }

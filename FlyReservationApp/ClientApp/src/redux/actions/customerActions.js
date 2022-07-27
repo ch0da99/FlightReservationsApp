@@ -24,6 +24,13 @@ const cancelFlightSuccess = (id) => {
   return { type: types.CUSTOMER_CANCEL_FLIGHT_FROM_ADMINISTRATOR_SUCCESS, id };
 };
 
+const updateTakenSeatsSuccess = (reservation) => {
+  return {
+    type: types.CUSTOMER_UPDATE_TAKEN_SEATS_ON_FLIGHT_SUCCESS,
+    reservation,
+  };
+};
+
 export const getAllReservationsForCustomer = (reservations) => {
   return async (dispatch) => {
     dispatch(customerAllReservationsSuccess(reservations));
@@ -57,5 +64,11 @@ export const getAllCities = (cities) => {
 export const cancelFlight = (id) => {
   return async (dispatch) => {
     dispatch(cancelFlightSuccess(id));
+  };
+};
+
+export const updateTakenSeats = (reservation) => {
+  return async (dispatch) => {
+    dispatch(updateTakenSeatsSuccess(reservation));
   };
 };
