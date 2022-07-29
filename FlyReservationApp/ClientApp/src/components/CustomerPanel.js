@@ -17,6 +17,7 @@ import {
   approvedReservation,
   cancelFlight,
 } from "../redux/actions/customerActions.js";
+import moment from "moment";
 
 const CustomerPanel = ({
   user,
@@ -80,8 +81,8 @@ const CustomerPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-                {reservation.flight.departureTime} ---
-                {">"} {reservation.flight.arrivalTime}
+                {moment(reservation.flight.departureTime).format("LLL")} ---
+                {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>{reservation.quantity} ticket/s</li>
             </ul>
@@ -104,8 +105,8 @@ const CustomerPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-                {reservation.flight.departureTime} ---
-                {">"} {reservation.flight.arrivalTime}
+                {moment(reservation.flight.departureTime).format("LLL")} ---
+                {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>{reservation.quantity} ticket/s</li>
             </ul>
@@ -127,8 +128,8 @@ const CustomerPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-                {reservation.flight.departureTime} ---
-                {">"} {reservation.flight.arrivalTime}
+                {moment(reservation.flight.departureTime).format("LLL")} ---
+                {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>{reservation.quantity} ticket/s</li>
             </ul>

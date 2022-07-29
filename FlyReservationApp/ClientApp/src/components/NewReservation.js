@@ -24,6 +24,7 @@ import {
 } from "../api/signalR/remoteProcedures";
 import { Input, Label } from "reactstrap";
 import "../style/css/NewReservation.css";
+import moment from "moment";
 
 const NewFlight = ({
   user,
@@ -163,7 +164,7 @@ const NewFlight = ({
         )
         .filter((f) => (!filterNoTransfer ? f : f.transfer == null ? f : null))
         .map((flight) => (
-          <div className={"flight "} key={flight.id}>
+          <div className={`flight ${moment.duration(new Date(flight.departureTime).getTime() - new Date().getTime()).asDays() < 7 ? "last-3-days" : ""}`} key={flight.id}>
             <ul className="list-inline">
               <li>
                 {flight.startingCity.name} ---{">"}{" "}
@@ -174,8 +175,8 @@ const NewFlight = ({
                 )}
                 {flight.destinationCity.name}
                 <br></br>
-                {flight.departureTime} ---
-                {">"} {flight.arrivalTime}
+                {moment(flight.departureTime).format("LLL")} ---
+                {">"} {moment(flight.arrivalTime).format("LLL")}
               </li>
               <li>Available tickets: {flight.allSeats - flight.takenSeats}</li>
               <li>
@@ -190,10 +191,11 @@ const NewFlight = ({
                       onChange={(e) => {
                         setQuantity(parseInt(e.target.value));
                       }}
+                      disabled={moment.duration(new Date(flight.departureTime).getTime() - new Date().getTime()).asDays() < 7}
                     ></Input>
                   </li>
                   <li>
-                    <button
+                    <button disabled={moment.duration(new Date(flight.departureTime).getTime() - new Date().getTime()).asDays() < 7}
                       onClick={() => {
                         createReservationClick(flight.id);
                       }}

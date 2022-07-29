@@ -20,6 +20,7 @@ import {
   newReservationCreatedFromCustomer,
   cancelFlight,
 } from "../redux/actions/agentActions.js";
+import moment from "moment";
 
 const AgentPanel = ({
   user,
@@ -103,8 +104,8 @@ const AgentPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-                {reservation.flight.departureTime} ---
-                {">"} {reservation.flight.arrivalTime}
+              {moment(reservation.flight.departureTime).format("LLL")} ---
+                {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>
                 {reservation.customer.username}: {reservation.quantity} ticket/s
@@ -138,8 +139,8 @@ const AgentPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-                {reservation.flight.departureTime} ---
-                {">"} {reservation.flight.arrivalTime}
+              {moment(reservation.flight.departureTime).format("LLL")} ---
+                {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>
                 {reservation.customer.username}: {reservation.quantity} ticket/s
@@ -163,8 +164,8 @@ const AgentPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-                {reservation.flight.departureTime} ---
-                {">"} {reservation.flight.arrivalTime}
+              {moment(reservation.flight.departureTime).format("LLL")} ---
+                {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>{reservation.quantity} ticket/s</li>
             </ul>

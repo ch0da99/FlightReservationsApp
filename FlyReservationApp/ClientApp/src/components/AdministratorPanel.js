@@ -20,6 +20,7 @@ import {
 } from "../api/signalR/responseProcedures";
 import "../style/css/AdministratorPanel.css";
 import { connect } from "react-redux";
+import moment from "moment";
 
 const AdministratorPanel = ({
   user,
@@ -91,8 +92,8 @@ const AdministratorPanel = ({
                 )}
                 {flight.destinationCity.name}
                 <br></br>
-                {flight.departureTime} ---
-                {">"} {flight.arrivalTime}
+                {moment(flight.departureTime).format("LLL")} ---
+                {">"} {moment(flight.arrivalTime).format("LLL")}
               </li>
               <li>Available tickets: {flight.allSeats - flight.takenSeats}</li>
               <li>Created by: {flight.agent.username}</li>
@@ -119,8 +120,8 @@ const AdministratorPanel = ({
                 )}
                 {flight.destinationCity.name}
                 <br></br>
-                {flight.departureTime} ---
-                {">"} {flight.arrivalTime}
+                {moment(flight.departureTime).format("LLL")} ---
+                {">"} {moment(flight.arrivalTime).format("LLL")}
               </li>
               <li>Available tickets: {flight.allSeats - flight.takenSeats}</li>
               <li>Created by: {flight.agent.username}</li>
