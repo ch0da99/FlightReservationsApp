@@ -12,7 +12,7 @@ const NewUser = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("Customer");
   if (connectionSignalR.state !== "Connected") {
     connectionSignalR
       .start()
@@ -45,6 +45,7 @@ const NewUser = () => {
     } else {
       alert("Problem with creating new user. Please try again.");
     }
+    user.preventDefault()
   });
   return (
     <div>

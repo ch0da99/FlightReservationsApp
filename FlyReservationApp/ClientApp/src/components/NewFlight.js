@@ -13,15 +13,15 @@ import {
   ALL_CITIES_RESPONSE,
   ADD_NEW_FLIGHT_RESPONSE,
 } from "../api/signalR/responseProcedures";
+import moment from "moment";
 
 const NewFlight = ({ user, cities, loadAllCities }) => {
   const [startingCity, setStartingCity] = useState();
-  const [departureDate, setDepartureDate] = useState();
+  const [departureDate, setDepartureDate] = useState(new Date());
   const [destinationCity, setDestinationCity] = useState();
-  const [arrivalDate, setArrivalDate] = useState();
+  const [arrivalDate, setArrivalDate] = useState(new Date());
   const [transferCity, setTransferCity] = useState();
-  const [availableSeats, setAvailableSeats] = useState();
-
+  const [availableSeats, setAvailableSeats] = useState(100);
   useEffect(() => {
     if (cities.length === 0 && connectionSignalR.state === "Connected") {
       connectionSignalR
@@ -85,10 +85,11 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
   });
   connectionSignalR.on(ADD_NEW_FLIGHT_RESPONSE, (response) => {
     if (response) {
-      //alert("Successfuly added new flight!");
+      alert("Successfuly added new flight!");
     } else {
-      //alert("Failed to add new flight. Please try again.");
+      alert("Failed to add new flight. Please try again.");
     }
+    response.preventDefault()
   });
   return (
     <div>
@@ -114,8 +115,8 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
           <Label>Take off date:</Label>
           <Input
             type="datetime-local"
+            defaultValue={moment().format("yyyy-MM-DDThh:mm")}
             onChange={(e) => {
-              console.log(e.target.value);
               setDepartureDate(e.target.value);
             }}
           />
@@ -141,9 +142,8 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
           <Label>Landing date:</Label>
           <Input
             type="datetime-local"
-            defaultValue={Date.now()}
+            defaultValue={moment().format("yyyy-MM-DDThh:mm")}
             onChange={(e) => {
-              console.log(new Date(e.target.value).toISOString());
               setArrivalDate(e.target.value);
             }}
           />

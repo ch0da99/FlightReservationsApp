@@ -88,12 +88,12 @@ const NewFlight = ({
   );
   connectionSignalR.on(NEW_RESERVATION_CREATED_RESPONSE, (reservation) => {
     takenSeatsChange(reservation);
-    reservation.preventDefault();
     if (reservation != null) {
       alert("Successfuly added new reservation!");
     } else {
       alert("Problem with adding new reservation, try again later.");
     }
+    reservation.preventDefault();
   });
   connectionSignalR.on(ADD_NEW_FLIGHT_RESPONSE, (flight) => {
     newFlightCreate(flight);
