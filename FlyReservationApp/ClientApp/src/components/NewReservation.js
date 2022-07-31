@@ -164,7 +164,19 @@ const NewFlight = ({
         )
         .filter((f) => (!filterNoTransfer ? f : f.transfer == null ? f : null))
         .map((flight) => (
-          <div className={`flight ${moment.duration(new Date(flight.departureTime).getTime() - new Date().getTime()).asDays() < 7 ? "last-3-days" : ""}`} key={flight.id}>
+          <div
+            className={`flight ${
+              moment
+                .duration(
+                  new Date(flight.departureTime).getTime() -
+                    new Date().getTime()
+                )
+                .asDays() < 7
+                ? "last-3-days"
+                : ""
+            }`}
+            key={flight.id}
+          >
             <ul className="list-inline">
               <li>
                 {flight.startingCity.name} ---{">"}{" "}
@@ -191,11 +203,26 @@ const NewFlight = ({
                       onChange={(e) => {
                         setQuantity(parseInt(e.target.value));
                       }}
-                      disabled={moment.duration(new Date(flight.departureTime).getTime() - new Date().getTime()).asDays() < 7}
+                      disabled={
+                        moment
+                          .duration(
+                            new Date(flight.departureTime).getTime() -
+                              new Date().getTime()
+                          )
+                          .asDays() < 7
+                      }
                     ></Input>
                   </li>
                   <li>
-                    <button disabled={moment.duration(new Date(flight.departureTime).getTime() - new Date().getTime()).asDays() < 7}
+                    <button
+                      disabled={
+                        moment
+                          .duration(
+                            new Date(flight.departureTime).getTime() -
+                              new Date().getTime()
+                          )
+                          .asDays() < 7
+                      }
                       onClick={() => {
                         createReservationClick(flight.id);
                       }}

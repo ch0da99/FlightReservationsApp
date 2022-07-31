@@ -12,6 +12,11 @@ const LoginReducer = (state = initialState, action) => {
       };
     case types.USER_LOGIN_FAILURE:
       return state;
+    case types.USER_LOGOUT_SUCCESS:
+      return {
+        ...state,
+        user: null,
+      };
     default:
       return state;
   }

@@ -12,8 +12,9 @@ import { Link } from "react-router-dom";
 import "../style/css/NavMenu.css";
 import { useState } from "react";
 import { connect } from "react-redux";
+import { logOutUser } from "../redux/actions/loginActions";
 
-const NavMenu = ({ user }) => {
+const NavMenu = ({ user, logOut }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleNavbar = () => {
@@ -47,14 +48,14 @@ const NavMenu = ({ user }) => {
                   Home
                 </NavLink>
               </NavItem>
-              {user.role == "Agent" && (
+              {user?.role == "Agent" && (
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/addNewFlight">
                     New Flight
                   </NavLink>
                 </NavItem>
               )}
-              {user.role == "Customer" && (
+              {user?.role == "Customer" && (
                 <NavItem>
                   <NavLink
                     tag={Link}
@@ -65,31 +66,28 @@ const NavMenu = ({ user }) => {
                   </NavLink>
                 </NavItem>
               )}
-              {user.role == "Administrator" && (
+              {user?.role == "Administrator" && (
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/addNewUser">
                     New User
                   </NavLink>
                 </NavItem>
               )}
+              <NavItem>
+                <NavLink
+                  tag={Link}
+                  className="text-dark"
+                  to="/"
+                  disabled={user == null}
+                  onClick={() => {
+                    console.log(user);
+                    logOut();
+                  }}
+                >
+                  Log out
+                </NavLink>
+              </NavItem>
             </ul>
-            {/* <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">
-                  Home
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/counter">
-                  Counter
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/fetch-data">
-                  Fetch data
-                </NavLink>
-              </NavItem>
-            </ul> */}
           </Collapse>
         </Container>
       </Navbar>
@@ -99,9 +97,11 @@ const NavMenu = ({ user }) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.LoginReducer.user ? state.LoginReducer.user : [],
+    user: state.LoginReducer.user ? state.LoginReducer.user : null,
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  logOut: logOutUser,
+};
 export default connect(mapStateToProps, mapDispatchToProps)(NavMenu);

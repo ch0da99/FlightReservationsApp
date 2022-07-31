@@ -11,19 +11,9 @@ const userLoginSuccess = (response) => {
 const userLoginFailure = (error) => {
   return { type: types.USER_LOGIN_FAILURE, error };
 };
-
-const userLogoutRequest = () => {
-  return { type: types.USER_LOGOUT_REQUEST };
+const userLogoutSuccess = () => {
+  return { type: types.USER_LOGOUT_SUCCESS };
 };
-
-const userLogoutSuccess = (response) => {
-  return { type: types.USER_LOGOUT_SUCCESS, response };
-};
-
-const userLogoutFailure = (error) => {
-  return { type: types.USER_LOGOUT_FAILURE, error };
-};
-
 export const logInUserWithCredentials = (username, password) => {
   return async (dispatch) => {
     dispatch(userLoginRequest());
@@ -36,5 +26,11 @@ export const logInUserWithCredentials = (username, password) => {
         dispatch(userLoginFailure(error));
         console.log(error);
       });
+  };
+};
+
+export const logOutUser = () => {
+  return async (dispatch) => {
+    dispatch(userLogoutSuccess());
   };
 };
