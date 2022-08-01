@@ -80,7 +80,7 @@ const NavMenu = ({ user, logOut }) => {
                   to="/"
                   disabled={user == null}
                   onClick={() => {
-                    console.log(user);
+                    localStorage.removeItem("user");
                     logOut();
                   }}
                 >

@@ -1,11 +1,8 @@
-import React, { useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import Login from "./Login";
 import { connect } from "react-redux";
 
 const ProtectedRoute = ({ user, requiredRole = null }) => {
   const location = useLocation();
-  console.log(requiredRole);
   return user && (requiredRole == null || requiredRole == user.role) ? (
     <Outlet />
   ) : (

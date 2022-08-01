@@ -1,19 +1,30 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Input, Row, Card, Button } from "reactstrap";
-import { logIn } from "../api/login";
 import { connect } from "react-redux";
-import {
-  logInUserWithCredentials,
-  userRoleCheck,
-} from "../redux/actions/loginActions";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { logInUserWithCredentials } from "../redux/actions/loginActions";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Login = ({ user, role, logIn, userRole }) => {
+const Login = ({ user, logIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    const userStorage = localStorage.getItem("user");
+    if (userStorage != null) {
+      user = JSON.parse(userStorage);
+      (async () => {
+        await logIn(user.username, user.password);
+        navigate(from, { replace: true });
+      })();
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   return (
     <>
@@ -41,12 +52,9 @@ const Login = ({ user, role, logIn, userRole }) => {
               className="col-6"
             />
             <Button
-              onClick={() => {
-                logIn(username, password);
+              onClick={async () => {
+                await logIn(username, password);
                 navigate(from, { replace: true });
-                setTimeout(() => {
-                  navigate(from, { replace: true });
-                }, [500]);
               }}
               className="btn-primary mt-5"
             >
@@ -61,7 +69,7 @@ const Login = ({ user, role, logIn, userRole }) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.LoginReducer.user ? state.LoginReducer.user : [],
+    user: state.LoginReducer.user ? state.LoginReducer.user : null,
   };
 };
 

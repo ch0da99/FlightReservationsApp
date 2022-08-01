@@ -20,7 +20,7 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
   const [departureDate, setDepartureDate] = useState(new Date());
   const [destinationCity, setDestinationCity] = useState();
   const [arrivalDate, setArrivalDate] = useState(new Date());
-  const [transferCity, setTransferCity] = useState();
+  const [transferCity, setTransferCity] = useState(0);
   const [availableSeats, setAvailableSeats] = useState(100);
   useEffect(() => {
     if (cities.length === 0 && connectionSignalR.state === "Connected") {
@@ -30,12 +30,7 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
     }
   }, []);
   const createClick = () => {
-    console.log(startingCity);
-    console.log(departureDate);
-    console.log(destinationCity);
-    console.log(arrivalDate);
     console.log(transferCity);
-    console.log(availableSeats);
     if (
       startingCity !== undefined &&
       departureDate !== undefined &&
@@ -53,7 +48,9 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
           new Date(departureDate).toISOString(),
           cities.filter((c) => c.id == startingCity)[0].id,
           cities.filter((c) => c.id == destinationCity)[0].id,
-          cities.filter((c) => c.id == transferCity)[0].id
+          transferCity != 0
+            ? cities.filter((c) => c.id == destinationCity)[0].id
+            : 0
         )
         .catch((error) => console.log(error));
     } else {
@@ -89,7 +86,7 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
     } else {
       alert("Failed to add new flight. Please try again.");
     }
-    response.preventDefault()
+    response.preventDefault();
   });
   return (
     <div>
@@ -165,14 +162,18 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
           <Input
             type="select"
             onChange={(e) => {
+              console.log(e.target.options.selectedIndex);
               setTransferCity(
-                cities.filter(
-                  (c) => c.id == cities[e.target.options.selectedIndex].id
-                )[0].id
+                e.target.options.selectedIndex != 0
+                  ? cities.filter(
+                      (c) =>
+                        c.id == cities[e.target.options.selectedIndex - 1].id
+                    )[0].id
+                  : 0
               );
             }}
           >
-            <option>None</option>
+            <option key={0}>None</option>
             {cities.map((city) => (
               <option key={city.id}>{city.name}</option>
             ))}

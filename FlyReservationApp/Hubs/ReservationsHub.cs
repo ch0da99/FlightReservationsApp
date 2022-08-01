@@ -59,7 +59,7 @@ namespace FlightReservationsApp.Hubs
                 DepartureTime = DateTime.Parse(departureTime),
                 StartingCity = repository.GetCityById(startingCityId),
                 DestinationCity = repository.GetCityById(destinationCityId),
-                Transfer = repository.GetCityById(transferCityId),
+                Transfer = transferCityId > 0 ? repository.GetCityById(transferCityId) : null,
                 Canceled = false,
                 TakenSeats = 0
             };
