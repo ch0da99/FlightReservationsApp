@@ -52,7 +52,6 @@ const CustomerPanel = ({
     }
   });
   connectionSignalR.on(ALL_USER_RESERVATIONS_RESPONSE, (reservations) => {
-    console.log(reservations);
     fetchReservations(reservations);
   });
   connectionSignalR.on(NEW_RESERVATION_APPROVE, (idR) => {
@@ -140,7 +139,6 @@ const CustomerPanel = ({
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: state.LoginReducer.user ? state.LoginReducer.user : null,
     reservations: state.CustomerReducer.reservations

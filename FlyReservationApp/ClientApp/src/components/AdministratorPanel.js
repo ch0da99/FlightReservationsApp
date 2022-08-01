@@ -32,7 +32,6 @@ const AdministratorPanel = ({
 }) => {
   useEffect(() => {
     if (flights.length === 0 && connectionSignalR.state !== "Disconnected") {
-      console.log(user);
       connectionSignalR
         .invoke(ALL_FLIGHTS_REQUEST, user.id)
         .catch((error) => console.log(error));
@@ -73,7 +72,6 @@ const AdministratorPanel = ({
     newFlightCreate(flight);
   });
   connectionSignalR.on(NEW_RESERVATION_CREATED_RESPONSE, (reservation) => {
-    console.log(reservation);
     takenSeatsChange(reservation);
   });
   return (

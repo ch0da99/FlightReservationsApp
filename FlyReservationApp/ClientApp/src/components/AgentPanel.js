@@ -41,13 +41,11 @@ const AgentPanel = ({
     }
   }, []);
   const ApproveReservationClick = (idReservation) => {
-    console.log(idReservation);
     connectionSignalR
       .invoke(SIGNALR_AGENT_APPROVE_RESERVATION_REQUEST, idReservation)
       .catch((error) => console.log(error));
   };
   if (connectionSignalR.state === "Disconnected") {
-    console.log(user.id);
     connectionSignalR
       .start()
       .then(() => {
@@ -58,7 +56,6 @@ const AgentPanel = ({
       .catch((error) => console.log(error));
   }
   connectionSignalR.on(IS_USER_CONNECTED, (connected) => {
-    console.log(connected);
     if (connected) {
       connectionSignalR
         .invoke(SIGNALR_AGENT_ALL_RESERVATIONS_REQUEST)
@@ -104,7 +101,7 @@ const AgentPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-              {moment(reservation.flight.departureTime).format("LLL")} ---
+                {moment(reservation.flight.departureTime).format("LLL")} ---
                 {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>
@@ -139,7 +136,7 @@ const AgentPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-              {moment(reservation.flight.departureTime).format("LLL")} ---
+                {moment(reservation.flight.departureTime).format("LLL")} ---
                 {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>
@@ -164,7 +161,7 @@ const AgentPanel = ({
                 {reservation.flight.destinationCity.name}
               </li>
               <li>
-              {moment(reservation.flight.departureTime).format("LLL")} ---
+                {moment(reservation.flight.departureTime).format("LLL")} ---
                 {">"} {moment(reservation.flight.arrivalTime).format("LLL")}
               </li>
               <li>{reservation.quantity} ticket/s</li>

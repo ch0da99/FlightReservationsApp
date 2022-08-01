@@ -1,7 +1,6 @@
 import axios from "axios";
 import { base_url } from "./apiConfig";
 
-// login request
 export const logIn = (username, pass) => {
   return axios({
     method: "POST",

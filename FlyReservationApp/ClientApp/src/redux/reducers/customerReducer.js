@@ -76,7 +76,6 @@ const CustomerReducer = (state = initialState, action) => {
             : state.reservations,
       };
     case types.CUSTOMER_UPDATE_TAKEN_SEATS_ON_FLIGHT_SUCCESS:
-      console.log(state);
       if (state.updatedReservation == action.reservation) {
         return state;
       }

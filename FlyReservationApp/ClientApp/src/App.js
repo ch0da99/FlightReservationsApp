@@ -15,19 +15,6 @@ const App = () => {
     <Layout>
       <Routes>
         <Route path="/signIn" element={<Login />} />
-        {/* <Route element={<ProtectedRoute user={user} role={"agent"} />}>
-          <Route element={<Home />} path="/home"></Route>
-        </Route> */}
-        {/* <Route element={<ProtectedRoute requiredRole={"administrator"} />}>
-          <Route path="/homeAdmin" element={<AdministratorPanel />} />
-        </Route>
-        <Route element={<ProtectedRoute requiredRole={"agent"} />}>
-          <Route path="/homeAgent" element={<AgentPanel />} />
-        </Route>
-        <Route element={<ProtectedRoute requiredRole={"customer"} />}>
-          <Route path="/homeCustomer" element={<CustomerPanel />} />
-        </Route>
-      </Routes> */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedRoute requiredRole={"Agent"} />}>

@@ -30,7 +30,6 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
     }
   }, []);
   const createClick = () => {
-    console.log(transferCity);
     if (
       startingCity !== undefined &&
       departureDate !== undefined &&
@@ -162,7 +161,6 @@ const NewFlight = ({ user, cities, loadAllCities }) => {
           <Input
             type="select"
             onChange={(e) => {
-              console.log(e.target.options.selectedIndex);
               setTransferCity(
                 e.target.options.selectedIndex != 0
                   ? cities.filter(
