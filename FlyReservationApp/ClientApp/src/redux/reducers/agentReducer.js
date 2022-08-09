@@ -35,30 +35,13 @@ const AgentReducer = (state = initialState, action) => {
             : [...state.reservations],
       };
     case types.AGENT_CANCEL_FLIGHT_FROM_ADMINISTRATOR_SUCCESS:
-      let indexR =
-        state.reservations != undefined && state.reservations != null
-          ? state.reservations?.indexOf(
-              state.reservations.filter((r) => r.flight.id == action.id)[0]
-            )
-          : 0;
+      const activeReservations = state.reservations;
+      activeReservations.map((r) => {
+        r.flight.id === action.id ? (r.flight.canceled = true) : r;
+      });
       return {
         ...state,
-        reservations:
-          indexR != undefined && indexR != null && indexR > 0
-            ? state.reservations != undefined && state.reservations != null
-              ? [
-                  ...state.reservations.slice(0, indexR),
-                  {
-                    ...state.reservations[indexR],
-                    flight: {
-                      ...state.reservations[indexR].flight,
-                      canceled: true,
-                    },
-                  },
-                  ...state.reservations.slice(indexR + 1),
-                ]
-              : []
-            : state.reservations,
+        reservations: [...activeReservations],
       };
     default:
       return state;

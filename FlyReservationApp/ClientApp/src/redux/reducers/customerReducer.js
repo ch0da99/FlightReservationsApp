@@ -41,39 +41,25 @@ const CustomerReducer = (state = initialState, action) => {
         cities: action.cities,
       };
     case types.CUSTOMER_CANCEL_FLIGHT_FROM_ADMINISTRATOR_SUCCESS:
-      let indexF = state.flights.indexOf(
+      let indexF = state.flights?.indexOf(
         state.flights.filter((f) => f.id == action.id)[0]
       );
-      let indexR = state.reservations?.indexOf(
-        state.reservations.filter((r) => r.flight.id == action.id)[0]
-      );
+      const activeReservations = state.reservations;
+      activeReservations.map((r) => {
+        r.flight.id === action.id ? (r.flight.canceled = true) : r;
+      });
       return {
         ...state,
         flights:
-          indexF != undefined && indexF != null && indexF > -1
-            ? state.flights != undefined && state.flights != null
+          indexF !== undefined && indexF !== null && indexF > -1
+            ? state.flights !== undefined && state.flights !== null
               ? [
                   ...state.flights.slice(0, indexF),
                   ...state.flights.slice(indexF + 1),
                 ]
               : []
             : state.flights,
-        reservations:
-          indexR != undefined && indexR != null && indexR > -1
-            ? state.reservations != undefined && state.reservations != null
-              ? [
-                  ...state.reservations.slice(0, indexR),
-                  {
-                    ...state.reservations[indexR],
-                    flight: {
-                      ...state.reservations[indexR].flight,
-                      canceled: true,
-                    },
-                  },
-                  ...state.reservations.slice(indexR + 1),
-                ]
-              : []
-            : state.reservations,
+        reservations: [...activeReservations],
       };
     case types.CUSTOMER_UPDATE_TAKEN_SEATS_ON_FLIGHT_SUCCESS:
       if (state.updatedReservation == action.reservation) {
