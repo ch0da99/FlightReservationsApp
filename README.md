@@ -1,4 +1,4 @@
-# <h2>An Application that gives user utilitye to create reservations on flights.</h2> 
+# <h2>An Application that gives user utilitys to create reservations on flights.</h2> 
 <p>It's a mini-app that contains 4 cities currently: Belgrade, Kraljevo, Nis and Pristina.<br>
 It's highly scalable and easy to expand in future.</p>
 <p>It's based on <b>.Net Web Application Techology</b> that uses<b> API Controllers</b> for handling backend traffic
